@@ -20,16 +20,20 @@ function SalesCard() {
     const [maxDate, setMaxDate] = useState(max);
 
     const [sales, setSales] = useState<Sale[]>([]);
-
+    
     useEffect(() => {
-        //Buscando do bakend as vendas
-        axios.get(`${BASE_URL}/sales`)
+        const dmin = minDate.toISOString().slice(0, 10);
+        const dmax = maxDate.toISOString().slice(0, 10);
+
+        console.log(dmin)
+        //Buscando do bakend as vendas com as datas
+        axios.get(`${BASE_URL}/sales?minDate=${dmin}&maxDate=${dmax}`)
             //E chegar a reposta com sucesso.
             .then(response => {
                 //Vou chamar o useStales com o valor que voltouda api
                 setSales(response.data.content);
             });
-    }, []);
+    }, [minDate, maxDate]);
 
     return (
         <>
@@ -39,7 +43,7 @@ function SalesCard() {
                     <div className="dsmeta-form-control-container">
                         <DatePicker
                             selected={minDate}
-                            onChange={(date: Date) => setMinDate}
+                            onChange={(date: Date) => setMinDate(date)}
                             className="dsmeta-form-control"
                             dateFormat="dd/MM/yyyy"
                         />
